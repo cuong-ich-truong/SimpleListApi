@@ -1,2 +1,3 @@
 # SimpleListApi
-WebAPI with .NET Core 3
+
+WebAPI with .NET Core 3.1
