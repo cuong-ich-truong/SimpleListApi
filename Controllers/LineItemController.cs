@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using SimpleListApi.Models;
+using SimpleListApi.Dtos;
+using SimpleListApi.Services.LineItemService;
 
 namespace SimpleListApi.Controllers
 {
@@ -10,44 +11,37 @@ namespace SimpleListApi.Controllers
   [Route("api/lineitems")]
   public class LineItemController : ControllerBase
   {
-    private static List<LineItem> lineItems = new List<LineItem>{
-      new LineItem("TV", 2000),
-      new LineItem("Playstation", 400),
-      new LineItem("Stereo", 1600),
-    };
+    private readonly ILineItemService _lineItemService;
+
+    public LineItemController(ILineItemService lineItemService)
+    {
+      _lineItemService = lineItemService;
+    }
 
     [HttpGet]
-    public ActionResult<IEnumerable<LineItem>> Get()
+    public async Task<ActionResult<IEnumerable<ReadLineItemDto>>> Get()
     {
-      return Ok(lineItems);
+      return Ok(await _lineItemService.GetAll());
     }
 
     [HttpGet]
     [Route("{id}")]
-    public ActionResult<LineItem> GetById(Guid id)
+    public async Task<ActionResult<ReadLineItemDto>> GetById(Guid id)
     {
-      return Ok(lineItems.FirstOrDefault(e => e.Id == id));
+      return Ok(await _lineItemService.GetById(id));
     }
 
     [HttpPost]
-    public ActionResult<LineItem> AddLineItem(LineItem item)
+    public async Task<ActionResult<ReadLineItemDto>> CreateLineItem(CreateLineItemDto item)
     {
-      var newItem = new LineItem(item.Name, item.Price);
-      lineItems.Add(newItem);
-      return Ok(newItem);
+      return Ok(await _lineItemService.CreateLineItem(item));
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public ActionResult<LineItem> DeleteLineItem(Guid id)
+    public async Task<ActionResult<ReadLineItemDto>> DeleteLineItem(Guid id)
     {
-      var item = lineItems.FirstOrDefault(e => e.Id == id);
-      if (item != null)
-      {
-        lineItems.Remove(item);
-      }
-
-      return Ok(item);
+      return Ok(await _lineItemService.DeleteLineItem(id));
     }
   }
 }

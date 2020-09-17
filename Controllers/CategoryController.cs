@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SimpleListApi.Models;
+using SimpleListApi.Services.CategoryService;
 
 namespace SimpleListApi.Controllers
 {
@@ -8,15 +10,16 @@ namespace SimpleListApi.Controllers
   [Route("api/categories")]
   public class CategoryController : ControllerBase
   {
-    [HttpGet]
-    public ActionResult<IEnumerable<Category>> Get()
+    private readonly ICategoryService _categoryService;
+    public CategoryController(ICategoryService categoryService)
     {
-      var items = new List<Category>();
-      items.Add(new Category("Electronic"));
-      items.Add(new Category("Clothing"));
-      items.Add(new Category("Kitchen"));
+      _categoryService = categoryService;
+    }
 
-      return Ok(items);
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Category>>> Get()
+    {
+      return Ok(await _categoryService.GetAll());
     }
   }
 }
