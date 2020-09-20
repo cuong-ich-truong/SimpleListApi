@@ -1,9 +1,11 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SimpleListApi.Contexts;
 using SimpleListApi.Services.CategoryService;
 using SimpleListApi.Services.LineItemService;
 
@@ -21,7 +23,14 @@ namespace SimpleListApi
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddControllers();
+      services.AddDbContext<SimpleListContext>(opt =>
+        opt.UseSqlite("Filename=./db/SimpleList.db")
+      );
+
+      services.AddControllers().AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+      );;
+
       services.AddAutoMapper(typeof(Startup));
       services.AddScoped<ICategoryService, CategoryService>();
       services.AddScoped<ILineItemService, LineItemService>();

@@ -2,14 +2,12 @@ using System;
 
 namespace SimpleListApi.Dtos
 {
-  public class ReadLineItemDto
+  public class SimpleLineItemDto
   {
     public Guid Id { get; set; }
 
     public string Name { get; set; }
 
     public decimal Price { get; set; }
-
-    public SimpleCategoryDto Category { get; set; }
   }
 }

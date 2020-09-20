@@ -8,8 +8,10 @@ namespace SimpleListApi
   {
     public AutoMapperProfile()
     {
+      CreateMap<Category, SimpleCategoryDto>();
       CreateMap<Category, ReadCategoryDto>();
 
+      CreateMap<LineItem, SimpleLineItemDto>();
       CreateMap<LineItem, ReadLineItemDto>();
       CreateMap<CreateLineItemDto, LineItem>();
     }

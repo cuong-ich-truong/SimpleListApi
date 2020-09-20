@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SimpleListApi.Dtos
 {
@@ -7,5 +8,7 @@ namespace SimpleListApi.Dtos
     public Guid Id { get; set; }
 
     public string Name { get; set; }
+
+    public List<SimpleLineItemDto> LineItems { get; set; }
   }
 }
