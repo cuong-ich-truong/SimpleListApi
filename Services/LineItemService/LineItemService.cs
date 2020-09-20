@@ -25,10 +25,7 @@ namespace SimpleListApi.Services.LineItemService
     public async Task<ServiceResponse<List<ReadLineItemDto>>> GetAll()
     {
       var items = await _context.LineItems.ToListAsync();
-      return new ServiceResponse<List<ReadLineItemDto>>
-      {
-        Data = _mapper.Map<List<ReadLineItemDto>>(items)
-      };
+      return new ServiceResponse<List<ReadLineItemDto>> { Data = _mapper.Map<List<ReadLineItemDto>>(items) };
     }
 
     public async Task<ServiceResponse<ReadLineItemDto>> GetById(Guid id)
@@ -40,7 +37,26 @@ namespace SimpleListApi.Services.LineItemService
         return new ServiceResponse<ReadLineItemDto> { Data = _mapper.Map<ReadLineItemDto>(item) };
       }
 
-      return new ServiceResponse<ReadLineItemDto> { Data = null, Message = "Item not found", Success = false };;
+      return new ServiceResponse<ReadLineItemDto>
+      {
+        Data = null,
+        Message = "Item not found",
+        Success = false
+      };
+    }
+
+    public async Task<ServiceResponse<List<ReadLineItemDto>>> GetByCategoryId(Guid categoryId)
+    {
+      var category = await _context.Categories.FindAsync(categoryId);
+
+      if (category == null)
+      {
+        return new ServiceResponse<List<ReadLineItemDto>> { Data = null, Message = "Item not found", Success = false };
+      }
+
+      var items = await _context.LineItems.Where(item => item.CategoryId == categoryId).ToListAsync();
+
+      return new ServiceResponse<List<ReadLineItemDto>> { Data = _mapper.Map<List<ReadLineItemDto>>(items) };
     }
 
     public async Task<ServiceResponse<ReadLineItemDto>> CreateLineItem(CreateLineItemDto newItem)
@@ -63,8 +79,12 @@ namespace SimpleListApi.Services.LineItemService
         return new ServiceResponse<ReadLineItemDto> { Data = _mapper.Map<ReadLineItemDto>(item) };
       }
 
-      return new ServiceResponse<ReadLineItemDto> { Data = null, Message = "Item not found", Success = false };;
+      return new ServiceResponse<ReadLineItemDto>
+      {
+        Data = null,
+        Message = "Item not found",
+        Success = false
+      };
     }
-
   }
 }

@@ -12,6 +12,8 @@ namespace SimpleListApi.Services.LineItemService
 
     Task<ServiceResponse<ReadLineItemDto>> GetById(Guid id);
 
+    Task<ServiceResponse<List<ReadLineItemDto>>> GetByCategoryId(Guid categoryId);
+
     Task<ServiceResponse<ReadLineItemDto>> CreateLineItem(CreateLineItemDto newItem);
 
     Task<ServiceResponse<ReadLineItemDto>> DeleteLineItem(Guid id);
