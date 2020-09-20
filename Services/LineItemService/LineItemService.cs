@@ -32,17 +32,13 @@ namespace SimpleListApi.Services.LineItemService
     {
       var item = await _context.LineItems.FindAsync(id);
 
-      if (item != null)
+      if (item == null)
       {
-        return new ServiceResponse<ReadLineItemDto> { Data = _mapper.Map<ReadLineItemDto>(item) };
+        return new ServiceResponse<ReadLineItemDto> { Data = null, Message = "Item not found", Success = false };
       }
 
-      return new ServiceResponse<ReadLineItemDto>
-      {
-        Data = null,
-        Message = "Item not found",
-        Success = false
-      };
+      return new ServiceResponse<ReadLineItemDto> { Data = _mapper.Map<ReadLineItemDto>(item) };
+
     }
 
     public async Task<ServiceResponse<List<ReadLineItemDto>>> GetByCategoryId(Guid categoryId)
@@ -71,20 +67,15 @@ namespace SimpleListApi.Services.LineItemService
     public async Task<ServiceResponse<ReadLineItemDto>> DeleteLineItem(Guid id)
     {
       var item = _context.LineItems.FirstOrDefault(e => e.Id == id);
-      if (item != null)
+      if (item == null)
       {
-        _context.LineItems.Remove(item);
-        await _context.SaveChangesAsync();
-
-        return new ServiceResponse<ReadLineItemDto> { Data = _mapper.Map<ReadLineItemDto>(item) };
+        return new ServiceResponse<ReadLineItemDto> { Data = null, Message = "Item not found", Success = false };
       }
 
-      return new ServiceResponse<ReadLineItemDto>
-      {
-        Data = null,
-        Message = "Item not found",
-        Success = false
-      };
+      _context.LineItems.Remove(item);
+      await _context.SaveChangesAsync();
+
+      return new ServiceResponse<ReadLineItemDto> { Data = _mapper.Map<ReadLineItemDto>(item) };
     }
   }
 }
