@@ -28,7 +28,13 @@ namespace SimpleListApi.Controllers
     [Route("{id}")]
     public async Task<ActionResult<ReadLineItemDto>> GetById(Guid id)
     {
-      return Ok(await _lineItemService.GetById(id));
+      var response = await _lineItemService.GetById(id);
+      if (response.Data == null)
+      {
+        return NotFound(response);
+      }
+
+      return Ok(response);
     }
 
     [HttpPost]
@@ -41,7 +47,14 @@ namespace SimpleListApi.Controllers
     [Route("{id}")]
     public async Task<ActionResult<ReadLineItemDto>> DeleteLineItem(Guid id)
     {
-      return Ok(await _lineItemService.DeleteLineItem(id));
+      var response = await _lineItemService.DeleteLineItem(id);
+
+      if (response.Data == null)
+      {
+        return NotFound(response);
+      }
+
+      return Ok(response);
     }
   }
 }
