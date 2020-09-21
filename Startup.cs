@@ -13,6 +13,8 @@ namespace SimpleListApi
 {
   public class Startup
   {
+    readonly string AllowedOrigins = "AllowedOrigins";
+
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
@@ -27,6 +29,14 @@ namespace SimpleListApi
         opt.UseSqlite("Filename=./db/SimpleList.db")
       );
 
+      services.AddCors(options =>
+      {
+        options.AddPolicy(name: AllowedOrigins,
+          builder =>
+          {
+            builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
+          });
+      });
       services.AddControllers().AddNewtonsoftJson(options =>
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
       );;
@@ -47,6 +57,12 @@ namespace SimpleListApi
       app.UseHttpsRedirection();
 
       app.UseRouting();
+
+      if (env.IsDevelopment())
+      {
+        // Allow localhost in development
+        app.UseCors(AllowedOrigins);
+      }
 
       app.UseAuthorization();
 
